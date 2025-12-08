@@ -13,10 +13,9 @@
 #include "parameters.h"
 #include "hfx.h"
 #include "nips_hfx.h"
-#include "fm_count.h"
-#include "hll_count.h"
-#include "ll_count.h"
-
+#include "fm_deletable.h"
+#include "hll_deletable.h"
+#include "ll_deletable.h"
 using namespace std;
 
 // 定义全局变量（这些在 parameters.h 中声明为 extern）
