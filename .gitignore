@@ -1,0 +1,23 @@
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+.venv/
+.codex_pydeps/
+.mplconfig*/
+
+# Compiled artifacts
+*.exe
+*.o
+*.obj
+*.out
+build/
+
+# Generated experiment outputs, figures, and raw/canonicalized datasets
+results/
+smoke_*.csv
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
