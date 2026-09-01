@@ -3,13 +3,6 @@
 This repository contains the core implementation of HFX for continual
 active-set cardinality estimation under event-level differential privacy.
 
-## Implementation
-
-- `experiment1_active_set.cpp` contains the C++20 implementation of HFX, the
-  experiment driver, and the memory-matched baseline methods.
-- `experiment1_active_set.py` provides a Python implementation with the same
-  core workflow for quick experiments.
-
 ## HFX overview
 
 HFX expects a stream canonicalized upstream into active-set transitions. An
@@ -40,6 +33,13 @@ The implementation maintains the active noisy-prefix sum incrementally, giving
 O(1) release time and amortized O(1) node merges. HFX counters are bit-packed at
 exactly `q` bits per coordinate. The reported sketch-state budget includes the
 XOR matrix, packed load counters, and the two active binary-tree arrays.
+
+## Implementation
+
+- `experiment1_active_set.cpp` contains the C++20 implementation of HFX, the
+  experiment driver, and the memory-matched baseline methods.
+- `experiment1_active_set.py` provides a Python implementation with the same
+  core workflow for quick experiments.
 
 ## Requirements
 
