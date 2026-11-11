@@ -1,96 +1,89 @@
-# HFX: Private Continual Cardinality over Dynamic Active Sets
+# HFX
 
-This repository contains the core implementation of HFX for continual
-active-set cardinality estimation under event-level differential privacy.
+**Accurate and Memory-Efficient Private Continual Cardinality Estimation for Active Sets**
+
+HFX estimates the number of active sessions using a fixed-memory reversible
+sketch and differentially private releases.
 
 ## HFX overview
 
-HFX expects a stream canonicalized upstream into active-set transitions. An
-insertion activates an absent identifier, a deletion deactivates a present
-identifier, and malformed endpoints are converted to no-op updates. HFX itself
-keeps no per-identifier dictionary.
+HFX processes session endpoints using their identifiers, without requiring
+start or end labels. The two endpoints of a completed session toggle the same
+bit and cancel, allowing the sketch to represent current activity without
+storing a record for every session.
 
-The released cardinality trajectory satisfies event-level continual
-differential privacy, with one stream update as the privacy unit.
-
-For public counter width `q`, let
-
-```text
-R = 2^q - 1
-H = ceil(log2(T + 1))
-rho = (sqrt(log(1/delta) + epsilon) - sqrt(log(1/delta)))^2
-```
-
-The Gaussian tree uses the following per-node variance:
-
-```text
-sigma^2 = 2 (R + 1) H / rho.
-```
-
-The default `--hfx-noise-mode load_aware` uses this variance.
-
-The implementation maintains the active noisy-prefix sum incrementally, giving
-O(1) release time and amortized O(1) node merges. HFX counters are bit-packed at
-exactly `q` bits per coordinate. The reported sketch-state budget includes the
-XOR matrix, packed load counters, and the two active binary-tree arrays.
+The paper introduces a nonuniform memory layout and an adaptive weighted
+estimator. The layout is selected before processing and remains fixed, while
+column weights adapt to the previous private estimate. At scheduled releases,
+HFX adds Gaussian noise to the weighted bit counts and converts the result
+into an active-count estimate. The noise is calibrated to protect the full
+sequence of released counts, and the latest estimate is held between releases.
 
 ## Implementation
 
-- `experiment1_active_set.cpp` contains the C++20 implementation of HFX, the
-  experiment driver, and the memory-matched baseline methods.
-- `experiment1_active_set.py` provides a Python implementation with the same
-  core workflow for quick experiments.
+The benchmark drivers in this repository implement the coordinate-load-capped
+variant with Gaussian binary-tree releases on canonicalized insertion/deletion
+streams. The nonuniform layout and adaptive weighted estimator described in
+the current paper are not implemented in these drivers.
+
+- [experiment1_active_set.cpp](experiment1_active_set.cpp): C++20 implementation
+  with packed sketch state, synthetic stream generation, and baseline methods.
+- [experiment1_active_set.py](experiment1_active_set.py): NumPy reference
+  implementation and experiment driver.
 
 ## Requirements
 
-- A C++20 compiler. The commands below have been tested with MinGW-w64 `g++`
-  on Windows.
-- Python 3.10+ with NumPy for the Python implementation.
+- C++20 compiler for the C++ driver. The commands below use MinGW-w64 `g++`
+  on Windows, available on `PATH`.
+- Python 3.10+ and NumPy for the Python driver.
+
+```powershell
+python -m pip install numpy
+```
 
 ## Build
 
-Compile the C++ implementation on Windows PowerShell:
+From the repository directory in PowerShell:
 
 ```powershell
-g++ -std=c++20 -O3 -march=native -o experiment1_active_set.exe experiment1_active_set.cpp
+g++ -std=c++20 -O3 -o experiment1_active_set.exe experiment1_active_set.cpp
 ```
 
-For a portable build, omit `-march=native`.
+Add `-march=native` to optimize for the machine running the experiment.
 
 ## Quick start
+
+Run HFX on a synthetic stream of 20,000 updates with an 8 KiB sketch-state
+budget and privacy parameters `epsilon = 1`, `delta = 1e-6`.
 
 C++:
 
 ```powershell
-.\experiment1_active_set.exe --T 20000 --q 8 `
-  --hfx-noise-mode load_aware --output example_hfx_cpp.csv
+.\experiment1_active_set.exe --T 20000 --memory-kb 8 --epsilon 1 --delta 1e-6 `
+  --trials 1 --methods hfx --q 8 --hfx-noise-mode load_aware `
+  --eval-every 1000 --output example_hfx_cpp.csv
 ```
 
 Python:
 
 ```powershell
-python .\experiment1_active_set.py --T 20000 --memory-kb 8 --epsilon 1 `
+python .\experiment1_active_set.py --T 20000 --memory-kb 8 --epsilon 1 --delta 1e-6 `
   --trials 1 --methods hfx --q 8 --hfx-noise-mode load_aware `
-  --output example_hfx_python.csv
+  --eval-every 1000 --output example_hfx_python.csv
 ```
 
-The implementation separates stream, public-hash, and Gaussian-noise seeds:
+Both examples evaluate every 1,000 updates. Each output CSV records the trial
+configuration, realized seeds, error metrics, and clipping statistics.
 
-```text
---seed-stream 4801289
---seed-hash   63242691
---seed-noise  981723641
-```
-
-Each CSV records the realized seeds and configuration fields, including `rho`,
-`q`, `R`, `sigma_node`, `clipping_rate`, and `eval_every`.
+Use `--seed-stream`, `--seed-hash`, and `--seed-noise` to set the random seeds
+independently for stream generation, hashing, and Gaussian noise.
 
 ## Baselines
 
-The experiment driver also provides Flip-DP-Hash, FM-Diff, LL-Diff, and
-HLL-Diff. All methods use the configured sketch-state budget and evaluation
-schedule.
+The drivers include Flip-DP-Hash (`flipdp`), FM-Diff (`fm`), LL-Diff (`ll`),
+and HLL-Diff (`hll`). Set `--methods hfx,flipdp,fm,ll,hll` to compare all five
+methods under the configured sketch-state budget and evaluation schedule.
 
 ## License
 
-See `LICENSE`.
+[MIT](LICENSE).
