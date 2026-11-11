@@ -1,4 +1,6 @@
-# Experiment configurations
+# ⚙️ Experiment configurations
+
+[← Back to HFX](../README.md) · [Experiment guide](../docs/experiments.md)
 
 The JSON files specify workloads, privacy parameters, release schedules, and
 layouts for the C++ benchmark driver.
