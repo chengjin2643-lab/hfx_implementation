@@ -1,0 +1,47 @@
+{
+  "w": 5,
+  "q16": 2,
+  "rows": [
+    131008,
+    32832,
+    32768,
+    32768,
+    32768
+  ],
+  "origin": "head-0.5-tailpower-0",
+  "index": 1396,
+  "max_variance_ratio": 1.8676078181158222,
+  "mean_log_variance_ratio": -0.9427355638097992,
+  "dense_max_variance_ratio": 1.8682856431777743,
+  "memory_kib": 32,
+  "capacity": 2097152,
+  "K": 393,
+  "epsilon": 1.0,
+  "mode": "payload",
+  "gmod_width": 5,
+  "gmod_rows": 52428,
+  "gmod_state_bytes": 33736,
+  "sigma": 83.75099584568571,
+  "state_bytes": 33800,
+  "selector_rule": "hfx-public-balanced-risk-v20261110-w32",
+  "variance_ratio_cap": 2.0,
+  "score_grid_points": 223,
+  "guard_grid_points": 2790,
+  "candidate_count": 21685,
+  "elapsed_seconds": 109.73333024978638,
+  "changed_vs_canonical": true,
+  "prior_layout": {
+    "w": 6,
+    "q16": 9,
+    "rows": [
+      64,
+      67456,
+      88640,
+      6272,
+      91328,
+      8384
+    ],
+    "profile_id": "23ff9a99b741c843"
+  },
+  "profile_id": "29eefb788b502ba7"
+}

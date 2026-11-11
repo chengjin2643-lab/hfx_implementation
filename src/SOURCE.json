@@ -1,0 +1,15 @@
+{
+  "source_version": "2026-11-11 integrated benchmark core",
+  "hash_format": "SHA-256 with LF line endings",
+  "files": {
+    "adaptive_weighted.hpp": "1ed80929b8c42bde17fa5c8c52174b58f0c5872a30aec56d9b0a4859139629bc",
+    "frozen/icde_audit.cpp": "142a0e6baa9d2cfd86c560ce1a0efc2ad30c475a684f20c4c864b7e32f9fd961",
+    "frozen/snapshot_reference.cpp": "a53a309c25827e2bb03c1f370b0447a6918182546793266246b7953b4d5f4d72",
+    "heterogeneous.hpp": "e83eb08a434da541de8bba8a36e8f00585f9d9835c814536cea8d418f5b01552",
+    "hybrid.hpp": "394b83e81fbbe1c03d23a55933b0c72e1e2147e8612680181e97225e13cd2f8c",
+    "lean_hfx.hpp": "adc1554feb683aeb54d7c6f6d65fe762906d600acbe788810cb6f19d4ab7204a",
+    "previous_lean_hfx.hpp": "3e12c4a9cfc1c2a450ad9501624f03e59533c2ca28e6614c5a28d48efbe85a70",
+    "reference.hpp": "0f5984da87193d41c28e2cc9de1adb1dd6cd1abbf2c4df17e292a3b34312148c",
+    "tuned_ajs.hpp": "2bebf4c7dba0d1249d68d288616f67ca155c71ef993f20b612e2aed1b9320827"
+  }
+}

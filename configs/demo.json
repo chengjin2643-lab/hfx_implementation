@@ -1,0 +1,41 @@
+{
+  "mode": "full",
+  "dataset": "synthetic",
+  "pattern": "fresh",
+  "N": 1000,
+  "T": 21000,
+  "Nmax": 2000,
+  "K": 200,
+  "B": 10000,
+  "memory_kib": 32,
+  "completion": -1.0,
+  "hot": 0,
+  "seed": 46101601,
+  "epsilon": 1.0,
+  "first": 0,
+  "trials": 1,
+  "group": "demo",
+  "key": "n1000_t21000",
+  "delta": 1e-06,
+  "schedule": "fixed-k",
+  "input": null,
+  "layout": {
+    "q16": 16,
+    "rows": [
+      255424
+    ],
+    "gmod_width": 1,
+    "gmod_rows": 254656,
+    "profile_id": "6cd4128cc252e5ee",
+    "w": 1,
+    "capacity": 2000,
+    "K": 200,
+    "epsilon": 1.0,
+    "mode": "full",
+    "memory_kib": 32,
+    "sigma": 59.74598181957315,
+    "state_bytes": 32768,
+    "gmod_state_bytes": 32768,
+    "selector_rule": "hfx-public-candidates-v20261102-no-case-override"
+  }
+}

@@ -11,6 +11,8 @@ __pycache__/
 *.obj
 *.out
 build/
+/data/
+*.bin
 
 # Generated experiment outputs, figures, and raw/canonicalized datasets
 results/

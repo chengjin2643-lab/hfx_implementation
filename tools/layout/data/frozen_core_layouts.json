@@ -1,0 +1,194 @@
+[
+  {
+    "w": 6,
+    "q16": 9,
+    "rows": [
+      64,
+      65216,
+      85696,
+      6080,
+      88320,
+      8128
+    ],
+    "max_ratio": 0.8919876348967284,
+    "log_ratio": -0.44917217992401987,
+    "optimizer": "public starting layout",
+    "converged": true,
+    "case": "Active32",
+    "memory_kib": 32,
+    "capacity": 2000000,
+    "K": 200,
+    "memory_mode": "complete",
+    "sigma": 59.74598181957315,
+    "state_bytes": 32768,
+    "gmod_width": 6,
+    "gmod_rows": 42389,
+    "gmod_state_bytes": 32768,
+    "reference_widths": [
+      6,
+      8
+    ],
+    "objective": "minimum maximum local-risk ratio to public GMod envelope",
+    "selection_rule": "within 1e-6 relative public-risk optimum; prefer retained GMod coordinates"
+  },
+  {
+    "w": 2,
+    "q16": 8,
+    "rows": [
+      384,
+      1041088
+    ],
+    "max_ratio": 1.0,
+    "log_ratio": -0.4578688327407016,
+    "optimizer": "exact retained-coordinate embedding",
+    "converged": true,
+    "case": "Active128",
+    "memory_kib": 128,
+    "capacity": 2000000,
+    "K": 200,
+    "memory_mode": "complete",
+    "sigma": 59.74598181957315,
+    "state_bytes": 131072,
+    "gmod_width": 1,
+    "gmod_rows": 1041088,
+    "gmod_state_bytes": 131072,
+    "reference_widths": [
+      1
+    ],
+    "objective": "minimum maximum local-risk ratio to public GMod envelope",
+    "selection_rule": "within 1e-6 relative public-risk optimum; prefer retained GMod coordinates"
+  },
+  {
+    "w": 8,
+    "q16": 8,
+    "rows": [
+      192,
+      7488,
+      7296,
+      7360,
+      11136,
+      1664,
+      17856,
+      3136
+    ],
+    "max_ratio": 1.0586160145652452,
+    "log_ratio": -0.4068258562023338,
+    "optimizer": "public local minimax",
+    "converged": false,
+    "case": "Azure8",
+    "memory_kib": 8,
+    "capacity": 2097152,
+    "K": 393,
+    "memory_mode": "complete",
+    "sigma": 83.75099584568571,
+    "state_bytes": 8192,
+    "gmod_width": 8,
+    "gmod_rows": 7200,
+    "gmod_state_bytes": 8192,
+    "reference_widths": [
+      8,
+      11
+    ],
+    "objective": "minimum maximum local-risk ratio to public GMod envelope",
+    "selection_rule": "within 1e-6 relative public-risk optimum; prefer retained GMod coordinates"
+  },
+  {
+    "w": 9,
+    "q16": 12,
+    "rows": [
+      16960,
+      64,
+      28928,
+      128,
+      17088,
+      16064,
+      8064,
+      17024,
+      16960
+    ],
+    "max_ratio": 0.9679432673674541,
+    "log_ratio": -0.42706104978931003,
+    "optimizer": "public local minimax",
+    "converged": false,
+    "case": "Azure16",
+    "memory_kib": 16,
+    "capacity": 2097152,
+    "K": 393,
+    "memory_mode": "complete",
+    "sigma": 83.75099584568571,
+    "state_bytes": 16384,
+    "gmod_width": 7,
+    "gmod_rows": 17600,
+    "gmod_state_bytes": 16384,
+    "reference_widths": [
+      7,
+      9
+    ],
+    "objective": "minimum maximum local-risk ratio to public GMod envelope",
+    "selection_rule": "within 1e-6 relative public-risk optimum; prefer retained GMod coordinates"
+  },
+  {
+    "w": 6,
+    "q16": 9,
+    "rows": [
+      128,
+      64320,
+      86016,
+      5376,
+      90944,
+      6720
+    ],
+    "max_ratio": 0.9293013429737232,
+    "log_ratio": -0.4935373038007789,
+    "optimizer": "public local minimax",
+    "converged": false,
+    "case": "Azure32",
+    "memory_kib": 32,
+    "capacity": 2097152,
+    "K": 393,
+    "memory_mode": "complete",
+    "sigma": 83.75099584568571,
+    "state_bytes": 32768,
+    "gmod_width": 6,
+    "gmod_rows": 42389,
+    "gmod_state_bytes": 32768,
+    "reference_widths": [
+      6,
+      8
+    ],
+    "objective": "minimum maximum local-risk ratio to public GMod envelope",
+    "selection_rule": "within 1e-6 relative public-risk optimum; prefer retained GMod coordinates"
+  },
+  {
+    "w": 6,
+    "q16": 14,
+    "rows": [
+      87616,
+      64,
+      153472,
+      252096,
+      1280,
+      21120
+    ],
+    "max_ratio": 1.051569630945929,
+    "log_ratio": -0.38356033149145813,
+    "optimizer": "public local minimax",
+    "converged": false,
+    "case": "Azure64",
+    "memory_kib": 64,
+    "capacity": 2097152,
+    "K": 393,
+    "memory_mode": "complete",
+    "sigma": 83.75099584568571,
+    "state_bytes": 65536,
+    "gmod_width": 4,
+    "gmod_rows": 129152,
+    "gmod_state_bytes": 65536,
+    "reference_widths": [
+      4,
+      6
+    ],
+    "objective": "minimum maximum local-risk ratio to public GMod envelope",
+    "selection_rule": "within 1e-6 relative public-risk optimum; prefer retained GMod coordinates"
+  }
+]
