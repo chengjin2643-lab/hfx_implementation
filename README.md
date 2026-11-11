@@ -1,230 +1,143 @@
-<div align="center">
+# HFX: Accurate and Memory-Efficient Private Continual Cardinality Estimation for Active Sets
 
-<h1>✨ HFX</h1>
+![Language](https://img.shields.io/badge/Language-C%2B%2B20-255B85)
+![Python](https://img.shields.io/badge/Python-3.10%2B-27665F)
+[![License](https://img.shields.io/badge/License-MIT-54876B)](LICENSE)
 
-<p><strong>Accurate and Memory-Efficient Private Continual<br>
-Cardinality Estimation for Active Sets</strong></p>
+How many sessions are active in a service right now? HFX tracks sessions as
+they start and end using a compact sketch. It continually releases accurate
+counts with differential privacy, while keeping memory use fixed.
 
-<p>Private active counting · Fixed memory · Identifier-only updates</p>
+- ⚡ **High accuracy**
+- 🧠 **Low memory overhead**
+- 🔒 **Privacy protection**
 
-<p>
-  <a href="#quick-start"><img src="https://img.shields.io/badge/C%2B%2B-20-00599C?style=flat-square&amp;logo=cplusplus&amp;logoColor=white" alt="C++20"></a>
-  <a href="#quick-start"><img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&amp;logo=python&amp;logoColor=white" alt="Python 3.10+"></a>
-  <a href="#overview"><img src="https://img.shields.io/badge/Privacy-Differential%20Privacy-8172A5?style=flat-square" alt="Differential privacy"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-54876B?style=flat-square" alt="MIT license"></a>
-</p>
+[🚀 Quickstart](#quickstart) · [🧪 Examples](#examples) ·
+[🧩 Implementation](#implementation) · [📊 Workloads](#workloads) ·
+[🎛️ Parameters](#parameters)
 
-<p>
-  <a href="#overview">Overview</a> ·
-  <a href="#implementation">Implementation</a> ·
-  <a href="#quick-start">Quick start</a> ·
-  <a href="#examples">Examples</a> ·
-  <a href="#parameters">Parameters</a> ·
-  <a href="#datasets">Datasets</a>
-</p>
+## Quickstart
 
-</div>
-
----
-
-<a id="overview"></a>
-
-## ✨ HFX overview
-
-**HFX tracks active sessions as they start and end, using a fixed-memory
-reversible sketch and differentially private releases.** It consumes endpoint
-identifiers without requiring start or end labels.
-
-- 🔄 **Reversible updates.** A session's two endpoints toggle the same bit and
-  cancel, allowing HFX to maintain current activity without per-session records.
-- 🧠 **Fixed memory.** A nonuniform layout allocates the available bits before
-  processing and remains fixed throughout the stream.
-- 🎯 **Adaptive estimation.** Bounded column weights use the previous private
-  estimate to reduce the effects of sketching error and privacy noise.
-- 🔒 **Continual privacy.** Gaussian noise protects the full sequence of
-  scheduled releases. The latest private estimate is held between releases.
-
-<p align="center">
-  <img src="docs/assets/hfx-overview.svg" width="900" alt="HFX overview: reversible endpoint updates and scheduled private counting with adaptive weights.">
-</p>
-
-### Evaluation highlights
-
-| Setting | Result reported in the paper |
-| :--- | :--- |
-| Four real streams, five privacy budgets, 512 KiB bitmap | **45.5–78.5% lower mean RMSE** than the central-DP adaptation of GMod |
-| Ride, taxi, and network-flow streams, 32 KiB bitmap | Within **0.8–3.4%** of Exact-DP's mean RMSE, using **16.4–30.2%** of its complete state |
-| One billion active sessions | **1.62% RMSD** with **32 KiB complete state** |
-
----
-
-<a id="implementation"></a>
-
-## 🛠 Implementation
-
-The C++ core provides the sketch, adaptive decoder, and private releases.
-Python commands build the programs, select layouts, and run experiments.
-
-| Method | Command identifier | Implementation |
-| :--- | :--- | :--- |
-| **HFX** | `hfx` | Nonuniform layout and bounded adaptive weights — [core](src/lean_hfx.hpp) |
-| **GMod** | `gmod_public` | Central-DP adaptation with publicly selected width — [reference](src/frozen/icde_audit.cpp) |
-| **Half-Xor** | `hx_phi` | Bitmap-only φ estimator with 32 columns — [reference](src/frozen/icde_audit.cpp) |
-
-The three methods share the input stream, release schedule, and privacy budget
-in the [paired replay driver](benchmarks/replay.cpp).
-The [public layout selector](tools/layout) uses declared parameters and a public
-risk model. [Experiment configurations](configs/README.md) cover 154 settings.
-
----
-
-<a id="quick-start"></a>
-
-## 🚀 Quick start
-
-**Requirements:** Python 3.10+ and a 64-bit GCC or Clang compiler with C++20
-and `unsigned __int128` support. Layout selection uses NumPy, pandas, and SciPy.
+You need Python 3.10+ and a 64-bit GCC or Clang compiler with C++20 and
+`unsigned __int128` support. The demo generates its own input and uses the
+C++ standard library.
 
 ```shell
 git clone https://github.com/chengjin2643-lab/hfx_implementation.git
 cd hfx_implementation
-python -m pip install -r requirements.txt
-
 python run_experiments.py build
 python run_experiments.py check
 python run_experiments.py demo
 ```
 
-The example runs **21,000 endpoints, 200 releases, and a 32 KiB complete-state
-budget**. It compares all three sketches and writes:
-
-```text
-results/
-├── demo_summary.csv       # Per-trial accuracy and state size
-├── demo_releases.csv      # Estimates at each release
-└── demo_job.tsv           # Replay configuration
-```
-
-The checks verify endpoint cancellation, bounded weights, decoding,
-update-path equivalence, memory budgets, and error metrics.
+The demo compares three methods on 21,000 endpoints with 200 releases and
+a 32 KiB complete-state budget. Open `results/demo_summary.csv` for accuracy
+and memory use, and `results/demo_releases.csv` for the individual releases.
 
 <details>
-<summary><strong>Compiler setup</strong></summary>
+<summary>Windows compiler setup</summary>
 
-The compiler must be available on `PATH`. Set `CXX` to choose a different
-compiler. On Windows, MinGW-w64 GCC is supported and its directory can be
-set in PowerShell:
+With MinGW-w64, put its `bin` directory on `PATH` or set it in PowerShell:
 
 ```powershell
 $env:HFX_MINGW_BIN = "C:\msys64\mingw64\bin"
 python run_experiments.py build
 ```
 
-Use `python run_experiments.py build --native` for machine-specific optimizations.
+Set `CXX` to choose another compiler. Use `build --native` for
+machine-specific optimizations.
 
 </details>
 
----
+## Examples
 
-<a id="examples"></a>
-
-## 🧪 Examples
-
-### 1. One million active sessions
-
-Compare three sketches on **3,000,000 endpoints**, with **200 releases**
-and a **32 KiB complete-state budget**:
+**One million active sessions.** Run one trial over 3,000,000 endpoints with
+200 releases and a 32 KiB complete-state budget:
 
 ```shell
 python run_experiments.py run --config configs/active32.json --trials 1 --output results/active32
 ```
 
-To run HFX alone, add `--methods hfx`. Use `--trials 10` for ten paired trials.
-
-### 2. Repeated activity
-
-Exercise reactivated identifiers over **100,000 endpoints** at a **32 KiB
-bitmap budget**:
+**Repeated activity.** Test reactivated identifiers over 100,000 endpoints
+with a 32 KiB bitmap:
 
 ```shell
 python run_experiments.py run --config configs/paper.json --job reuse/reuse_t100000/m32/e1 --trials 1 --output results/repeated_activity
 ```
 
-### 3. Select a layout
-
-Choose a layout before processing from a **32 KiB complete-state budget**,
-a **2,000,000-session capacity bound**, and **200 releases**:
+**HFX alone.** Select a single method with `--methods`:
 
 ```shell
-python run_experiments.py select --memory-kib 32 --capacity 2000000 --releases 200 --mode full --objective controlled --output results/layout.json
+python run_experiments.py run --config configs/active32.json --methods hfx --trials 1 --output results/hfx
 ```
 
-The output supplies the `layout` entry of an experiment configuration.
-`controlled` uses the minimax rule, while `real_accuracy` uses the
-density-aware rule for real-stream experiments.
+Each command writes a summary CSV, a release CSV, and the replay configuration.
+The [experiment guide](docs/experiments.md) explains the output columns.
+CSV `rmsd` values are fractions, so `0.0068` means `0.68%` relative error.
 
-### 4. Replay an Azure VM stream
+## Implementation
 
-With the processed endpoint file at `data/azure_vm_endpoints_stable.bin`:
+HFX receives endpoint identifiers without requiring start or end labels.
+The two endpoints of a completed session toggle the same bit and cancel.
+Its memory layout stays fixed, while bounded weights adapt to the previous
+private estimate. Gaussian noise protects the sequence of released counts.
+
+The [comparison driver](benchmarks/replay.cpp) evaluates three sketches on
+the same stream, release schedule, and privacy budget:
+
+| Method | Command identifier | Description |
+| --- | --- | --- |
+| [**HFX**](src/lean_hfx.hpp) | `hfx` | Nonuniform memory layout and adaptive weighted estimation |
+| [GMod](src/frozen/icde_audit.cpp) | `gmod_public` | Central-DP adaptation with publicly selected width |
+| [Half-Xor](src/frozen/icde_audit.cpp) | `hx_phi` | Bitmap-only φ estimator with 32 columns |
+
+## Workloads
+
+| Workload | Activity | Source or configuration |
+| --- | --- | --- |
+| Synthetic | Active sessions, repeated activity, and long histories | [Configuration index](configs/README.md) |
+| CitiBike | Active rides | [System data](https://citibikenyc.com/system-data) |
+| TLC-Yellow | Active taxi trips | [TLC trip records](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) |
+| UGR16 | Active network flows | [UGR'16 dataset](https://nesg.ugr.es/nesg-ugr16/index.php) |
+| Azure VM | Virtual-machine lifecycles | [Azure Public Dataset V1](https://github.com/Azure/AzurePublicDataset/blob/master/AzurePublicDatasetV1.md) |
+
+For a processed Azure endpoint stream:
 
 ```shell
 python run_experiments.py run --config configs/azure32.json --input data/azure_vm_endpoints_stable.bin --trials 1 --output results/azure32
 ```
 
-This configuration uses **3,920,600 endpoints**, **393 releases**, and a
-**32 KiB bitmap budget**. The [input-format guide](docs/experiments.md#endpoint-format)
-describes the processed stream.
+The [input-format guide](docs/experiments.md#endpoint-format) describes the
+`HFXSTRM1` binary format. Each retained interval supplies two occurrences of
+an activity identifier.
 
----
+## Parameters
 
-<a id="parameters"></a>
+| Option for `run` | Meaning |
+| --- | --- |
+| `--config` | Workload, privacy, and layout settings in a JSON file |
+| `--job` | Named setting from `configs/paper.json` |
+| `--methods` | Comma-separated `hfx,gmod_public,hx_phi` |
+| `--trials`, `--seed` | Trial count and base seed |
+| `--input` | Processed endpoint stream |
+| `--output` | Output prefix |
 
-## ⚙️ Parameters
+Memory and privacy settings come from the selected configuration.
+`payload` limits bitmap storage. `full` limits complete state, including
+auxiliary arrays and decoder workspace.
 
-| Option | Command | Purpose |
-| :--- | :--- | :--- |
-| `--config` | `run` | JSON workload and layout configuration |
-| `--job` | `run` | Named setting from `configs/paper.json` |
-| `--methods` | `run` | Comma-separated `hfx,gmod_public,hx_phi` |
-| `--trials`, `--seed` | `run` | Trial count and base seed |
-| `--input` | `run` | Processed endpoint stream |
-| `--memory-kib`, `--capacity` | `select` | Memory budget and public capacity bound |
-| `--releases`, `--epsilon` | `select` | Release count and privacy budget |
-| `--mode`, `--objective` | `select` | Memory setting and public selection rule |
-| `--output` | `run`, `demo`, `select` | Output prefix or layout filename |
+To select a new layout from public parameters, install the Python dependencies
+and run:
 
-For `run`, workload and privacy parameters come from the JSON configuration.
-All supplied configurations use `delta = 1e-6`.
+```shell
+python -m pip install -r requirements.txt
+python run_experiments.py select --memory-kib 32 --capacity 2000000 --releases 200 --mode full --objective controlled --output results/layout.json
+```
 
-**Memory settings:** `payload` limits the bitmap, while `full` limits complete
-state including auxiliary arrays and decoder workspace. The replay checks
-the limit for every method in `full` mode.
+The selected profile supplies the `layout` field in a workload configuration.
+See the [experiment guide](docs/experiments.md) for all selection parameters
+and the [configuration index](configs/README.md) for the 154 supplied settings.
 
-📖 [Experiment guide](docs/experiments.md) ·
-[Configuration index](configs/README.md)
-
----
-
-<a id="datasets"></a>
-
-## 📊 Datasets
-
-The evaluation covers synthetic workloads and four real activity streams.
-The counts below refer to the **processed endpoint streams** used in the paper.
-
-| Dataset | Activity | Endpoints | Official source |
-| :--- | :--- | ---: | :--- |
-| **CitiBike** | Active rides | 33,246,012 | [System data](https://citibikenyc.com/system-data) |
-| **TLC-Yellow** | Active taxi trips | 29,447,920 | [TLC trip records](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) |
-| **UGR16** | Active network flows | 5,408,868 | [UGR'16 dataset](https://nesg.ugr.es/nesg-ugr16/index.php) |
-| **Azure VM** | Active virtual machines | 3,920,600 | [Azure Public Dataset V1](https://github.com/Azure/AzurePublicDataset/blob/master/AzurePublicDatasetV1.md) |
-
-Each retained activity interval yields two occurrences of its identifier.
-The sketches receive the identifiers, while interval labels supply evaluation
-ground truth.
-
----
-
-## 📄 License
+## License
 
 Released under the [MIT License](LICENSE).
